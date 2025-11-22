@@ -91,6 +91,20 @@ func TestStyle_Render(t *testing.T) {
 	}
 }
 
+func TestStyle_String(t *testing.T) {
+	// Test that String() returns codes without Reset or Text
+	style := NewStyle().Foreground(Red()).Bold(true)
+	want := "\x1b[31m\x1b[1m"
+	if got := style.String(); got != want {
+		t.Errorf("String() = %q, want %q", got, want)
+	}
+
+	// Test Plain
+	if got := NewStyle().String(); got != "" {
+		t.Errorf("String() plain = %q, want empty", got)
+	}
+}
+
 func TestStringUtilities(t *testing.T) {
 	tests := []struct {
 		name    string

@@ -75,6 +75,22 @@ clean := ansi.Strip(text)
 length := ansi.VisibleLen(text)
 ```
 
+### Advanced Composition
+
+When using `get-ansi` with other TUI libraries (like `bubbles/table`) that handle their own styling or background colors, using `Render()` might cause issues because it appends a `Reset` code, which can clear the external library's background style (causing "gaps" in selection bars).
+
+To avoid this, use `String()` to get the escape codes *without* the reset, and manually concatenate your text:
+
+```go
+// Instead of:
+// style.Render("Content") // -> Codes + Content + Reset
+
+// Use:
+cell := style.String() + "Content" 
+// -> Codes + Content (No Reset)
+// The external library will handle the reset at the end of the line/block.
+```
+
 ## License
 
 MIT

@@ -90,10 +90,18 @@ func (s Style) Render(text string) string {
 	if s.isPlain() {
 		return text
 	}
+	return s.String() + text + Reset
+}
+
+// String returns the ANSI escape sequence for this style.
+func (s Style) String() string {
+	if s.isPlain() {
+		return ""
+	}
 
 	var b strings.Builder
-	// Estimate length: text + ~20 bytes for codes
-	b.Grow(len(text) + 20)
+	// Estimate length: ~20 bytes for codes
+	b.Grow(20)
 
 	if s.fg != nil {
 		b.WriteString(s.fg.String())
@@ -126,9 +134,6 @@ func (s Style) Render(text string) string {
 	if s.strikethrough {
 		b.WriteString(Strikethrough)
 	}
-
-	b.WriteString(text)
-	b.WriteString(Reset)
 
 	return b.String()
 }
